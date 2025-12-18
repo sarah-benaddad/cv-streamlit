@@ -1,3 +1,31 @@
+from pathlib import Path
+import streamlit as st
+
+# ======================
+# PATHS (ROBUSTES CLOUD)
+# ======================
+APP_DIR = Path(__file__).resolve().parent        # .../app
+ASSETS_DIR = APP_DIR / "assets"
+photo_path = ASSETS_DIR / "photo.jpg"
+
+if photo_path.exists():
+    st.image(str(photo_path), width=180, output_format="PNG")
+else:
+    st.warning("Photo introuvable : app/assets/photo.jpg")
+
+pdf_path = ASSETS_DIR / "Cv_alternance.pdf"
+
+if pdf_path.exists():
+    st.download_button(
+        "⬇️ Télécharger mon CV (PDF)",
+        data=pdf_path.read_bytes(),
+        file_name="Sarah_Benaddad_CV.pdf",
+        mime="application/pdf",
+        use_container_width=True
+    )
+else:
+    st.warning("PDF introuvable : app/assets/Cv_alternance.pdf")
+  
 import streamlit as st
 from pathlib import Path
 
