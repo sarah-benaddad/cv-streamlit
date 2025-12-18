@@ -3,6 +3,12 @@ from pathlib import Path
 
 st.set_page_config(page_title="Expérience | Sarah Benaddad", page_icon=None, layout="wide")
 
+# ======================
+# PATHS (ROBUSTES CLOUD)
+# ======================
+APP_DIR = Path(__file__).resolve().parents[1]    # .../app
+ASSETS_DIR = APP_DIR / "assets"
+
 # ---------- CSS ----------
 st.markdown("""
 <style>
@@ -31,11 +37,15 @@ def pills(tags):
         unsafe_allow_html=True
     )
 
-def show_logo(logo_path: str, width: int = 90):
-    """Affiche un logo si le fichier existe (PNG/JPG/WebP)."""
-    p = Path(logo_path)
+def show_logo(filename: str, width: int = 90):
+    """Affiche un logo depuis app/assets/ si le fichier existe."""
+    p = ASSETS_DIR / filename
     if p.exists():
-        st.image(str(p), width=width)
+        st.image(str(p), width=width, output_format="PNG")
+    else:
+        # utile si un logo ne s'affiche pas sur Cloud
+        # st.caption(f"Logo introuvable : {p.as_posix()}")
+        pass
 
 def experience_card(
     title: str,
@@ -48,22 +58,19 @@ def experience_card(
     right_title: str,
     right_bullets: list[str],
     value_bullets: list[str] | None = None,
-    logo_path: str | None = None,
+    logo_file: str | None = None,
     logo_width: int = 90,
 ):
     """Uniform card layout: logo top -> text down -> stack right."""
     with st.container(border=True):
-        # Header row
         h1, h2 = st.columns([5, 2], gap="large")
 
         with h1:
-            # Logo en haut
-            if logo_path:
-                show_logo(logo_path, width=logo_width)
+            if logo_file:
+                show_logo(logo_file, width=logo_width)
 
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-            # Titre/entreprise/meta descendus pour remplir l'espace
             st.markdown(f"<div class='role'>{title}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='company'>{company}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='meta'>{meta}</div>", unsafe_allow_html=True)
@@ -74,13 +81,11 @@ def experience_card(
 
         st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-        # Summary
         st.markdown("**Résumé**")
         st.write(summary)
 
         st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-        # Body (two columns)
         colA, colB = st.columns(2, gap="large")
         with colA:
             st.markdown(f"**{left_title}**")
@@ -92,7 +97,6 @@ def experience_card(
             for b in right_bullets:
                 st.write("•", b)
 
-        # Value / impact
         if value_bullets:
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
             st.markdown("**Valeur / impact**")
@@ -135,8 +139,8 @@ experience_card(
         "Livrables récurrents automatisés : moins de manuel, plus reproductible.",
         "Pilotage plus clair via KPIs et reporting.",
     ],
-    logo_path="assets/logo_ecosystem.png",
-    logo_width=110,  # adapte selon ton fichier
+    logo_file="logo_ecosystem.png",
+    logo_width=110,
 )
 
 st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
@@ -168,8 +172,7 @@ experience_card(
         "Meilleure visibilité sur les indicateurs clés et aide à la décision.",
         "Analyses actionnables pour ajuster les campagnes et le pilotage.",
     ],
-    # ⚠️ Streamlit gère mieux PNG/JPG que SVG selon versions. Si ton SVG pose souci, convertis en PNG.
-    logo_path="assets/logo_efs.png",
+    logo_file="logo_efs.png",
     logo_width=85,
 )
 
