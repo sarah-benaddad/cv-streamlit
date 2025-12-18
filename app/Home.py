@@ -1,35 +1,15 @@
-from pathlib import Path
 import streamlit as st
+from pathlib import Path
+
+st.set_page_config(page_title="CV | Sarah Benaddad", page_icon="📄", layout="wide")
 
 # ======================
 # PATHS (ROBUSTES CLOUD)
 # ======================
 APP_DIR = Path(__file__).resolve().parent        # .../app
 ASSETS_DIR = APP_DIR / "assets"
-photo_path = ASSETS_DIR / "photo.jpg"
-
-if photo_path.exists():
-    st.image(str(photo_path), width=180, output_format="PNG")
-else:
-    st.warning("Photo introuvable : app/assets/photo.jpg")
-
-pdf_path = ASSETS_DIR / "Cv_alternance.pdf"
-
-if pdf_path.exists():
-    st.download_button(
-        "⬇️ Télécharger mon CV (PDF)",
-        data=pdf_path.read_bytes(),
-        file_name="Sarah_Benaddad_CV.pdf",
-        mime="application/pdf",
-        use_container_width=True
-    )
-else:
-    st.warning("PDF introuvable : app/assets/Cv_alternance.pdf")
-  
-import streamlit as st
-from pathlib import Path
-
-st.set_page_config(page_title="CV | Sarah Benaddad", page_icon="📄", layout="wide")
+PHOTO_PATH = ASSETS_DIR / "photo.jpg"
+PDF_PATH = ASSETS_DIR / "Cv_alternance.pdf"
 
 # ---------- CSS ----------
 st.markdown("""
@@ -57,11 +37,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Sidebar (garder menu Streamlit en haut, ici = infos + liens) ----------
+# ---------- Sidebar ----------
 with st.sidebar:
     st.title("Sarah Benaddad")
     st.caption("Alternance Data • 2026–2027")
-    st.write("📍 Le Kremlin-Bicêtre")
+    st.write("Le Kremlin-Bicêtre")
     st.write("sarah.benaddad@hotmail.com")
     st.divider()
     st.link_button("LinkedIn", "https://www.linkedin.com/in/sarah-benaddad-876483250")
@@ -72,18 +52,17 @@ with st.sidebar:
 left, right = st.columns([1, 2], gap="large")
 
 with left:
-    photo_path = Path("assets/photo.jpg")
-    if photo_path.exists():
-        # Image plus petite + centrée
-        st.image(str(photo_path), use_container_width=True)
+    # Photo (cloud-safe)
+    if PHOTO_PATH.exists():
+        # Qualité meilleure
+        st.image(str(PHOTO_PATH), width=180, output_format="PNG")
     else:
         with st.container(border=True):
-            st.markdown("### ")
-            st.write("Ajoute une photo : `assets/photo.jpg` (optionnel)")
+            st.write("Ajoute une photo : `app/assets/photo.jpg` (optionnel)")
 
     st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-    # Boutons SOUS l'image
+    # Boutons sous la photo
     b1, b2, b3 = st.columns(3)
     with b1:
         st.link_button("LinkedIn", "https://www.linkedin.com/in/sarah-benaddad-876483250")
@@ -94,23 +73,22 @@ with left:
 
     st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-    # Télécharger CV (PDF) sous la photo aussi
-    pdf_path = Path("assets/Cv_alternance.pdf")
-    if pdf_path.exists():
+    # Télécharger CV (cloud-safe)
+    if PDF_PATH.exists():
         st.download_button(
             label="⬇️ Télécharger mon CV (PDF)",
-            data=pdf_path.read_bytes(),
+            data=PDF_PATH.read_bytes(),
             file_name="Sarah_Benaddad_CV.pdf",
             mime="application/pdf",
             use_container_width=True
         )
     else:
-        st.warning("Ajoute ton PDF dans `assets/Cv_alternance.pdf`")
+        st.warning("Ajoute ton PDF dans `app/assets/Cv_alternance.pdf`")
 
 with right:
     st.markdown("<div class='hero-title'>Sarah Benaddad</div>", unsafe_allow_html=True)
     st.markdown("<div class='hero-sub'>Data Analyst / Data Scientist • BI • Automatisation • SQL Databricks • Python</div>", unsafe_allow_html=True)
-    st.markdown("<div class='small'>📍 Le Kremlin-Bicêtre / Île-de-France • ✉️ sarah.benaddad@hotmail.com</div>", unsafe_allow_html=True)
+    st.markdown("<div class='small'>Le Kremlin-Bicêtre / Île-de-France • sarah.benaddad@hotmail.com</div>", unsafe_allow_html=True)
 
     st.markdown("""
     <div class="pills">
@@ -125,11 +103,11 @@ with right:
 
     st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-    st.info(" Recherche d’une alternance en **Data** (septembre 2026 → août 2027) | Rythme : 2 semaines entreprise / 1 semaine cours")
+    st.info("Recherche d’une alternance en **Data** (septembre 2026 → août 2027) | Rythme : 2 semaines entreprise / 1 semaine cours")
 
 st.divider()
 
-# ---------- “EN UN COUP D’ŒIL” ----------
+# ---------- En un coup d’œil ----------
 st.markdown("## En un coup d’œil")
 st.markdown("""
 <div class="kpi-wrap">
@@ -141,8 +119,8 @@ st.markdown("""
 
 st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-# ---------- PITCH ----------
-st.markdown("##  Pitch")
+# ---------- Pitch ----------
+st.markdown("## Pitch")
 st.write(
     "Je travaille sur des sujets data à la croisée du **métier** et de la **tech** : "
     "construction de datasets, automatisations Python, SQL sur Databricks, et restitution BI. "
@@ -152,16 +130,16 @@ st.write(
 
 st.divider()
 
-# ---------- CE QUE JE RECHERCHE ----------
-st.markdown("##  Ce que je recherche")
+# ---------- Ce que je recherche ----------
+st.markdown("## Ce que je recherche")
 c1, c2 = st.columns(2, gap="large")
 
 with c1:
     with st.container(border=True):
         st.markdown("### Alternance Data (2026–2027)")
-        st.write("📅 Septembre 2026 → Août 2027")
-        st.write("🗓️ Rythme : 2 semaines entreprise / 1 semaine cours")
-        st.write("📍 Île-de-France (ou hybride)")
+        st.write("Septembre 2026 → Août 2027")
+        st.write("Rythme : 2 semaines entreprise / 1 semaine cours")
+        st.write("Île-de-France (ou hybride)")
 
 with c2:
     with st.container(border=True):
@@ -175,7 +153,7 @@ with c2:
 
 st.divider()
 
-# ---------- SOFT SKILLS + LANGUES ----------
+# ---------- Soft skills & Langues ----------
 st.markdown("## Soft skills & Langues")
 s1, s2 = st.columns(2, gap="large")
 
@@ -196,4 +174,3 @@ with s2:
 - Anglais : avancé  
 - Espagnol : notions
 """)
-
