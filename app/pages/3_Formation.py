@@ -3,6 +3,12 @@ from pathlib import Path
 
 st.set_page_config(page_title="Formation | Sarah Benaddad", page_icon=None, layout="wide")
 
+# ======================
+# PATHS (ROBUSTES CLOUD)
+# ======================
+APP_DIR = Path(__file__).resolve().parents[1]   # .../app
+ASSETS_DIR = APP_DIR / "assets"
+
 st.markdown("""
 <style>
 .center { text-align:center; }
@@ -30,10 +36,14 @@ def pills(tags):
         unsafe_allow_html=True
     )
 
-def show_logo(logo_path: str, width: int = 90):
-    p = Path(logo_path)
+def show_logo(filename: str, width: int = 90):
+    p = ASSETS_DIR / filename
     if p.exists():
-        st.image(str(p), width=width)
+        st.image(str(p), width=width, output_format="PNG")
+    else:
+        # débug si un logo manque :
+        # st.caption(f"Logo introuvable : {p.as_posix()}")
+        pass
 
 def formation_card(
     title: str,
@@ -42,20 +52,18 @@ def formation_card(
     tags: list[str] | None = None,
     content: str | None = None,
     extra: list[str] | None = None,
-    logo_path: str | None = None,
+    logo_file: str | None = None,
     logo_width: int = 90,
 ):
     with st.container(border=True):
         h1, h2 = st.columns([5, 2], gap="large")
 
         with h1:
-            # Logo en haut (si dispo)
-            if logo_path:
-                show_logo(logo_path, width=logo_width)
+            if logo_file:
+                show_logo(logo_file, width=logo_width)
 
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
-            # Texte descendu dans l'espace
             st.markdown(f"<div class='role'>{title}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='school'>{school}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='meta'>{meta}</div>", unsafe_allow_html=True)
@@ -94,7 +102,7 @@ formation_card(
         "Analyse et visualisation de données géospatiales : optimisation de stratégies et campagnes (ex. Uber) avec Pandas, NumPy, Plotly.",
         "Analyse de données médicales : corrélation, ACP, réseaux de neurones, arbres de décision (diabète).",
     ],
-    logo_path="assets/logo_efrei.png",
+    logo_file="logo_efrei.png",
     logo_width=110,
 )
 
@@ -107,7 +115,7 @@ formation_card(
     meta="2022 → 2023",
     tags=["Sciences", "Biomédical", "Ingénierie", "Méthode"],
     content="Année de L1 en **sciences fondamentales et biomédicales** (orientation ingénierie & médical).",
-    logo_path="assets/logo_upc.png",
+    logo_file="logo_upc.png",
     logo_width=90,
 )
 
@@ -124,21 +132,20 @@ formation_card(
         "Lauréate concours national de la Résistance et la Déportation.",
         "Participation au concours « Je filme le métier qui me plaît » (métier choisi : réalisateur).",
     ],
-    logo_path="assets/logo_lasalle.png",
+    logo_file="logo_lasalle.png",
     logo_width=95,
 )
 
 st.divider()
 
-# ---------- Certifications (bloc 1) ----------
+# ---------- Certifications ----------
 st.markdown("## Certifications")
 c1, c2, c3 = st.columns(3, gap="large")
 
 with c1:
     with st.container(border=True):
-        # Logo optionnel
-        if Path("assets/logo_cambridge.png").exists():
-            show_logo("assets/logo_cambridge.png", width=110)
+        if (ASSETS_DIR / "logo_cambridge.png").exists():
+            show_logo("logo_cambridge.png", width=110)
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
         st.markdown("### B2 First")
@@ -162,9 +169,8 @@ c4, c5 = st.columns(2, gap="large")
 
 with c4:
     with st.container(border=True):
-        # Logo optionnel
-        if Path("assets/logo_skills4all.png").exists():
-            show_logo("assets/logo_skills4all.png", width=120)
+        if (ASSETS_DIR / "logo_skills4all.png").exists():
+            show_logo("logo_skills4all.png", width=120)
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
         st.markdown("### Attestation de réussite — Formation Back End")
@@ -174,9 +180,8 @@ with c4:
 
 with c5:
     with st.container(border=True):
-        # Logo EFREI optionnel (déjà en haut mais ici c'est une certif EFREI)
-        if Path("assets/logo_efrei.png").exists():
-            show_logo("assets/logo_efrei.png", width=110)
+        if (ASSETS_DIR / "logo_efrei.png").exists():
+            show_logo("logo_efrei.png", width=110)
             st.markdown("<div class='spacer'></div>", unsafe_allow_html=True)
 
         st.markdown("### Bases de l’IA générative")
